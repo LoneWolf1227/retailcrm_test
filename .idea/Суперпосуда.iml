@@ -16,8 +16,6 @@
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/phpdocumentor/type-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/phpdocumentor/reflection-docblock" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/php-http/promise" />
-      <excludeFolder url="file://$MODULE_DIR$/Api/vendor/php-http/curl-client" />
-      <excludeFolder url="file://$MODULE_DIR$/Api/vendor/php-http/message" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/retailcrm/api-client-php" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/sebastian/recursion-context" />
@@ -39,7 +37,6 @@
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/php-http/message-factory" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/cache" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/service-contracts" />
-      <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/options-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/var-exporter" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/console" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/polyfill-mbstring" />
@@ -93,10 +90,12 @@
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/psr/http-server-middleware" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/psr/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/psr/http-server-handler" />
-      <excludeFolder url="file://$MODULE_DIR$/Api/vendor/clue/stream-filter" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/liip/metadata-parser" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/liip/serializer" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/opis/closure" />
+      <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/http-client-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/Api/vendor/guzzlehttp/psr7" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

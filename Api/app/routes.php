@@ -8,7 +8,7 @@ use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
 return function (App $app) {
 
-    $app->group('/users', function (Group $group) {
+    $app->group('/orders', function (Group $group) {
         $group->post('/add', [AddOrderController::class, 'add']);
     });
 

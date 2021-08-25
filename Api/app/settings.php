@@ -17,10 +17,6 @@ return function (Container $container) {
                 'name' => 'Api',
                 'path' => $_ENV['LOGS_DIR_DOCKER'] . '/app.log',
                 'level' => Logger::DEBUG
-            ],
-            'retailcrm' => [
-                'url' => 'https://superposuda.retailcrm.ru/',
-                'apiKey' => 'QlnRWTTWw9lv3kjxy1A8byjUmBQedYqb'
             ]
         ];
     });

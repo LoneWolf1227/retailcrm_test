@@ -2,12 +2,17 @@
 
 namespace App\Controller;
 
-use Psr\Container\ContainerInterface;
+use App\Services\ValidatorService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use RetailCrm\Api\Enum\ByIdentifier;
+use RetailCrm\Api\Exception\Client\HandlerException;
+use RetailCrm\Api\Exception\Client\HttpClientException;
 use RetailCrm\Api\Factory\SimpleClientFactory;
 use RetailCrm\Api\Interfaces\ApiExceptionInterface;
+use RetailCrm\Api\Interfaces\ClientExceptionInterface;
+use RetailCrm\Api\Model\Entity\CustomersCorporate\Company;
+use RetailCrm\Api\Model\Entity\Orders\Items\Offer;
 use RetailCrm\Api\Model\Entity\Orders\Items\OrderProduct;
 use RetailCrm\Api\Model\Entity\Orders\Order;
 use RetailCrm\Api\Model\Request\BySiteRequest;
@@ -15,52 +20,72 @@ use RetailCrm\Api\Model\Request\Orders\OrdersCreateRequest;
 
 class AddOrderController extends Controller
 {
-    private mixed $retailcrm;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ValidatorService $validatorService)
     {
-        $this->retailcrm = $container->get('retailcrm');
     }
 
-
+    /**
+     * @throws \RetailCrm\Api\Exception\Api\ApiErrorException
+     * @throws ClientExceptionInterface
+     * @throws HandlerException
+     * @throws \RetailCrm\Api\Exception\Api\MissingCredentialsException
+     * @throws \RetailCrm\Api\Exception\Api\AccountDoesNotExistException
+     * @throws ApiExceptionInterface
+     * @throws HttpClientException
+     * @throws \RetailCrm\Api\Exception\Api\MissingParameterException
+     * @throws \RetailCrm\Api\Exception\Client\BuilderException
+     * @throws \RetailCrm\Api\Exception\Api\ValidationException
+     */
     public function add(Request $request, Response $response): Response
     {
         $params = $request->getParsedBody();
 
-        $client = SimpleClientFactory::createClient($this->retailcrm['url'], $this->retailcrm['apiKey']);
+        if ($this->validatorService->validateCreateOrderData($params)) {
 
-        $request = new OrdersCreateRequest();
-        $order = new Order();
-        $item = new OrderProduct();
+            $client = SimpleClientFactory::createClient('https://superposuda.retailcrm.ru/', 'QlnRWTTWw9lv3kjxy1A8byjUmBQedYqb');
 
-        $item->offer->externalId = ''; //Каталог
-        $item->productName = ''; //Имя продукта
-        $item->offer->article = ''; //Артикул
+            $request = new OrdersCreateRequest();
+            $order = new Order();
+            $offer = new Offer();
+            $item = new OrderProduct();
+            $company = new Company();
 
+            $company->brand = $params['brand']; //Бренд
+            $offer->externalId = $params['externalId']; //Каталог
+            $offer->article = $params['article']; //Артикул
 
-        $order->orderType = ''; //Тип
-        $order->status = ''; //Статус
-        $order->site = ''; //Магазин
-        $order->orderMethod = ''; //Способ оформления
-        $order->number = ''; //Номер заказа
-        $order->lastName = ''; //Фамилия
-        $order->firstName = ''; //Имя
-        $order->patronymic = ''; //Отчество
-        $order->customerComment = ''; //Коментарий
-        $order->items = $item;
-        $order->company->brand = ''; //Бренд
-        $order->customFields = ['prim' => '']; //
+            $item->offer = $offer;
+            $item->productName = $params['productName']; //Имя продукта
 
-        $request->order = $order;
+            $order->orderType = $params['orderType']; //Тип
+            $order->status = $params['status']; //Статус
+            $order->orderMethod = $params['orderMethod']; //Способ оформления
+            $order->number = $params['number']; //Номер заказа
+            $order->lastName = $params['lastName']; //Фамилия
+            $order->firstName = $params['firstName']; //Имя
+            $order->patronymic = $params['patronymic']; //Отчество
+            $order->customerComment = $params['customerComment']; //Коментарий
+            $order->customFields = ['prim' => $params['prim']]; //Пользовательское поле примечание (prim)
+            $order->items = $item;
+            $order->company = $company;
 
-        try {
-            $data = $client->orders->create($request);
-        } catch (ApiExceptionInterface $e) {
-            return $this->responseJsonData(['status' => 'Error', 'Message' => $e->getMessage()], $response);
+            $request->order = $order;
+            $request->site = $params['site']; //Магазин
+
+            try {
+                $data = $client->orders->create($request);
+            } catch (ApiExceptionInterface | ClientExceptionInterface $e) {
+                var_dump($e->getTraceAsString());
+                return $this->responseJsonData(['status' => 'Error', 'Message' => $e->getMessage()], $response);
+            } catch (HandlerException | HttpClientException $e) {
+                return $this->responseJsonData(['status' => 'Error', 'Message' => $e->getMessage()], $response);
+            }
+
+            $data = $client->orders->get($data->id, new BySiteRequest(ByIdentifier::EXTERNAL_ID, 'retailcrm'));
+
+            return $this->responseJsonData($data, $response);
         }
 
-        $data = $client->orders->get($data->id, new BySiteRequest(ByIdentifier::EXTERNAL_ID, 'retailcrm'));
-
-        return $this->responseJsonData($data, $response);
+        return $this->responseJsonData(['status' => 'Error'], $response);
     }
 }
