@@ -1,0 +1,36 @@
+version: '3.5'
+
+networks:
+ superposuda:
+
+services:
+  nginx-service:
+    image: nginx:latest
+    container_name: nginx-container
+    ports:
+      - "8080:80"
+    volumes:
+      - ../Api:/var/www/Суперпосуда/Api
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php8-service
+    networks:
+      - superposuda
+
+  php8-service:
+    build:
+      context: .
+      dockerfile: ./php/Dockerfile
+      args:
+        - USER_ID
+        - GROUP_ID
+    container_name: php8-container
+    ports:
+      - "9000:9000"
+    volumes:
+      - ../Api:/var/www/Суперпосуда/Api
+      - ../Api/logs:/var/www/Суперпосуда/Api/logs
+    environment:
+      LOGS_DIR_DOCKER: "/var/www/Суперпосуда/Api/logs"
+    networks:
+      - superposuda
