@@ -75,9 +75,6 @@ class AddOrderController extends Controller
             try {
                 $data = $client->orders->create($request);
             } catch (ApiExceptionInterface | ClientExceptionInterface $e) {
-                var_dump($e->getTraceAsString());
-                return $this->responseJsonData(['status' => 'Error', 'Message' => $e->getMessage()], $response);
-            } catch (HandlerException | HttpClientException $e) {
                 return $this->responseJsonData(['status' => 'Error', 'Message' => $e->getMessage()], $response);
             }
 
