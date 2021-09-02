@@ -96,6 +96,8 @@
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/http-client" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/symfony/http-client-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/Api/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/Api/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/Api/vendor/guzzlehttp/guzzle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

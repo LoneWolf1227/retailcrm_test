@@ -4,29 +4,39 @@ namespace App\Services;
 
 class ValidatorService
 {
-    public function validateCreateOrderData($data): bool
+    public function validateRequiredFields($data, $requiredFields)
     {
-        $fields = [
-            "externalId","productName","article","orderType",
-            "status","site", "orderMethod","number","lastName",
-            "firstName","patronymic","customerComment", "brand","prim"
-        ];
+        if (is_object($data))
+            $data = (array) $data;
 
-        $fieldsCount = count($fields);
+        $fieldsCount = count($requiredFields);
         $count = 0;
+        $emptyFields = '';
 
         foreach ($data as $key => $value) {
-            if (in_array($key, $fields)) {
+            if (in_array($key, $requiredFields)) {
                 if (!empty($value)) {
                     $count++;
+                } else {
+                    $emptyFields .= $key. ' ';
                 }
+                $reqKey = array_search($key, $requiredFields);
+                unset($requiredFields[$reqKey]);
             }
         }
 
         if ($count === $fieldsCount) {
-            return true;
+            return ['result' => true];
         }
 
-        return false;
+        if (!empty($emptyFields)) {
+            return ['result' => false, 'message' => 'Required fields \'' . $emptyFields . '\' empty'];
+        }
+
+        if (!empty($requiredFields)) {
+            $requiredFields = implode(', ', $requiredFields );
+            return ['result' => false, 'message' => 'Required fields \'' . $requiredFields . '\' not sent'];
+        }
+
     }
 }

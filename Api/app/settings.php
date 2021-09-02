@@ -17,6 +17,10 @@ return function (Container $container) {
                 'name' => 'Api',
                 'path' => $_ENV['LOGS_DIR_DOCKER'] . '/app.log',
                 'level' => Logger::DEBUG
+            ],
+            'retailCrmClient' => [
+                'apiUrl' => 'https://{yourSubDomain}.retailcrm.ru/',
+                'apiKey' => '{YorApiKey}'
             ]
         ];
     });
